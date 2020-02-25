@@ -14,11 +14,11 @@
 </head>
 
 <body>
-<div class="wrap"  id="goodsUpdateApp">
+<div class="wrap"  id="goodsAddApp">
   <!-- main begin-->
     
  <el-form :model="goods" :rules="rules" ref="resetForm" label-width="100px" class="demo-ruleForm">
- 	    <h1  style="text-align: center;height: 30px;    line-height: 30px; color: #E6A23C;">拍卖商品修改</h1>
+ 	    <h1  style="text-align: center;height: 30px;    line-height: 30px; color: #E6A23C;">添加拍卖商品</h1>
   <el-form-item label="名称" prop="nameMC">
     <el-input style="width:300px;" v-model="goods.nameMC"></el-input>
   </el-form-item>
@@ -64,9 +64,7 @@ clearable
   </div>
   </el-form-item>
   <el-form-item>
-  	
-    <el-button type="primary" @click="submitForm('resetForm')">提交</el-button>
-    <el-button @click="resetForm('resetForm')">返回</el-button>
+    <el-button type="primary" @click="submitForm('resetForm')">确定添加</el-button>
   </el-form-item>
 </el-form>
 </div>
@@ -118,12 +116,12 @@ clearable
         console.log(file);
       },
       
-      /*修改提交*/
+      /*商品添加*/
       submitForm(formName) {
-
-      		 this.$refs[formName].validate((valid) => {
+ 
+        this.$refs[formName].validate((valid) => {
           if (valid) {
-          	     	     	if(this.fileList.length==0){
+          	     	if(this.fileList.length==0){
       		this.$notify({
           title: '警告',
           message: '未选择图片',
@@ -133,19 +131,12 @@ clearable
       	}else{
       		alert('submit!');
       	}
-          
+            
           } else {
             console.log('error submit!!');
             return false;
           }
         });
-      		
-      	
-       
-      },
-      /*返回*/
-      resetForm(formName) {
-       $("#cnt").load("goodsGLiList.html")
       },
       /*图片格式判断*/
       checkType(file,fileList){
@@ -181,7 +172,7 @@ clearable
       }
     }
   }
-	var goodsUpdateApp=Vue.extend(Main);
-			new goodsUpdateApp().$mount("#goodsUpdateApp")
+	var goodsAddApp=Vue.extend(Main);
+			new goodsAddApp().$mount("#goodsAddApp")
 </script>
 </html>

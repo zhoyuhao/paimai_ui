@@ -79,7 +79,7 @@ font-weight: 900;
 	<body>
 		
 		<div id="workapp">
-<el-header>在线拍卖系统<span style="float: right;font-size: 15px;">用户：<span style="color: red;">{{user}}</span><el-button type="danger">注销</el-button></span> </el-header>
+<el-header>在线拍卖系统<span style="float: right;font-size: 15px;">用户：<span style="color: red;">{{user}}</span><el-button type="danger" @click="zhuxiao">注销</el-button></span> </el-header>
   <!--  <el-header>北大青鸟拍卖系统<span class="el-icon-shopping-bag-1"></span></el-header>-->
 <el-container  v-loading="loading"
     element-loading-text="拼命加载中"
@@ -110,7 +110,7 @@ font-weight: 900;
     <el-menu-item-group>
     	
       <el-menu-item index="3-1" @click="addUser('goodsGLiList.html')">竞拍商品管理</el-menu-item>
-      <el-menu-item index="3-2" @click="addUser('userList.html')">竞拍商品发布</el-menu-item>
+      <el-menu-item index="3-2" @click="addUser('goodsAdd.html')">竞拍商品发布</el-menu-item>
     </el-menu-item-group>
   </el-submenu>
   
@@ -120,7 +120,7 @@ font-weight: 900;
   </el-aside>
   <!--中间-->
   <el-main>
-  	<div id='cnt'><h1>欢迎您使用bug系统</h1></div>
+  	<div id='cnt'><h1>欢迎使用拍卖系统</h1></div>
  
   </el-main>
 </el-container>
@@ -172,6 +172,10 @@ font-weight: 900;
       },
       fanhu(){
       	$("#cnt").html('<h1>欢迎您使用bug系统</h1>')
+      },
+      zhuxiao(){
+      	location.href="glylogin.html";
+      	
       }
 			}
 		});
