@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/index.css" />
+		<link href="css/common.css" rel="stylesheet" type="text/css" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="js/vue.js" ></script>
+		<style>
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width:200px;
+  }
+  .el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    line-height: 160px;
+    min-height: 550px;
+}
+    .el-header, .el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+  }
+  
+  .el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+    text-align:left;
+    line-height: 200px;
+  }
+  
+  .el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    line-height: 160px;
+  }
+  
+  body > .el-container {
+    margin-bottom: 40px;
+  }
+  
+  .el-container:nth-child(5) .el-aside,
+  .el-container:nth-child(6) .el-aside {
+    line-height: 260px;
+  }
+  
+  .el-container:nth-child(7) .el-aside {
+    line-height: 320px;
+  }
+  .el-header, .el-footer {
+    background-color: #B3C0D1;
+    text-align: left;
+    line-height: 40px;
+    font-size: 20px;
+    color: white;
+    max-height: 40px;
+}
+.el-button{
+	padding: 5px 10px;
+	margin-left: 2ex;
+}
+.el-submenu__title {
+	font-weight:900;
+	font-size: 16px;
+}
+.el-menu-item{
+font-weight: 900;
+	font-size: 16px;	
+}
+.el-menu-item.is-active {
+    color:#E6A23C;
+}
+</style>
+	</head>
+	<body>
+		
+		<div id="workapp">
+<el-header>在线拍卖系统<span style="float: right;font-size: 15px;">用户：<span style="color: red;">{{user}}</span><el-button type="danger">注销</el-button></span> </el-header>
+  <!--  <el-header>北大青鸟拍卖系统<span class="el-icon-shopping-bag-1"></span></el-header>-->
+<el-container  v-loading="loading"
+    element-loading-text="拼命加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)">
+
+	<!--左侧-->
+  <el-aside width="206px">
+
+<el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+
+
+ <el-menu-item index="1">
+        <i class="el-icon-menu"></i>
+        <span slot="title"  @click="addUser('zhuye.html')">竞拍首页</span>
+      </el-menu-item>
+ <el-menu-item index="2">
+        <i class="el-icon-s-data"></i>
+        <span slot="title"  @click="addUser('goodsCount.html')">竞拍数据</span>
+      </el-menu-item>
+<el-submenu index="3">
+    <template slot="title">
+    	  	
+    	 <i class="el-icon-setting"></i>
+      
+      <span slot="title">竞拍系统管理</span>
+    </template>
+    <el-menu-item-group>
+    	
+      <el-menu-item index="3-1" @click="addUser('goodsGLiList.html')">竞拍商品管理</el-menu-item>
+      <el-menu-item index="3-2" @click="addUser('userList.html')">竞拍商品发布</el-menu-item>
+    </el-menu-item-group>
+  </el-submenu>
+  
+</el-menu>
+
+  	
+  </el-aside>
+  <!--中间-->
+  <el-main>
+  	<div id='cnt'><h1>欢迎您使用bug系统</h1></div>
+ 
+  </el-main>
+</el-container>
+		</div>
+		
+	</body>
+	<script type="text/javascript" src="js/jquery-1.12.4.js" ></script>
+	<script type="text/javascript" src="js/index.js" ></script>
+	<script>
+		
+		var Main = {
+    methods: {
+/*       open1() {
+        this.$notify({
+          title: '提示',
+          message: '管理员添加成功！',
+          offset:30
+        });
+      }*/
+    }
+  }
+		var _workapp1=Vue.extend(Main);
+		var workapp=new _workapp1({
+			el:"#workapp",
+			data:{
+				user:"张三",
+				loading:false,
+				isCollapse:false
+			},
+			methods:{
+				handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      addUser(url){
+      	if(url=="userList.html" || url=="goodsList.html"){
+      			workapp.loading=true;
+			setTimeout(()=>{
+				workapp.loading=false;
+				$("#cnt").load(url);
+			},1000);
+      	}else{
+      		$("#cnt").load(url);
+      	}
+  
+      	
+      },
+      fanhu(){
+      	$("#cnt").html('<h1>欢迎您使用bug系统</h1>')
+      }
+			}
+		});
+		
+		
+	
+	</script>
+</html>

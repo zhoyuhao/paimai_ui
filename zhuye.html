@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+
+<style type="text/css">
+	.el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    line-height:0px; 
+}
+.wrap {
+    width: 1000px;
+    text-align: center;
+    margin: 0 auto;
+}
+.el-pagination{
+    margin-top: 2ex;
+}
+.el-input__inner {
+	max-width: 128px;
+}
+.el-input{
+	max-width: 128px;
+}
+.forms>label{
+	font-size: 16px;
+}
+.forms{
+
+	text-align: left;
+}
+
+</style>
+</head>
+
+<body>
+<div class="wrap" id="zhuyeApp">
+<!-- main begin-->
+  <div class="forms">
+    <label for="name">名称</label>
+<el-input
+	  	 size="mini"
+  placeholder="请输入名称"
+  v-model="good.nameMC"
+  clearable>
+</el-input>
+        <label for="names">描述</label>
+<el-input
+	  	 size="mini"
+  placeholder="请输入描述"
+  v-model="good.nameMS"
+  clearable>
+</el-input>
+
+        <label for="time">开始时间</label>
+<el-date-picker
+           	 size="mini"
+      v-model="good.startDate"
+      type="datetime"
+      placeholder="开始时间"
+      align="right"
+     >
+    </el-date-picker>
+
+        <label for="end-time">结束时间</label>
+           <el-date-picker
+           	 size="mini"
+      v-model="good.endDate"
+      type="datetime"
+      placeholder="结束时间"
+      align="right"
+   >
+    </el-date-picker>
+    <label for="price">起拍价</label>
+<el-input
+	 size="mini"
+    maxlength="8"
+    oninput="value=value.replace(/[^\d.]/g,'')"
+    v-model="good.price"
+    placeholder="请输入价格"
+clearable
+></el-input>
+   <el-button type="primary" >查看</el-button>
+  </div>
+
+  <template>
+   <el-table
+   	 v-loading="loading"
+    :data="goods"
+    border
+    style="width: 100%">
+    <el-table-column
+      prop="nameMC"
+      label="名称"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="nameMS"
+      label="描述"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="startDate"
+      label="开始时间">
+    </el-table-column>
+    
+    <el-table-column
+      prop="endDate"
+      label="结束时间">
+    </el-table-column>
+    <el-table-column
+      prop="price"
+      label="起拍价">
+    </el-table-column>
+       <el-table-column
+      label="操作"
+      align="center"
+      >
+      <template slot-scope="temp">
+      	
+      	 <el-button
+          size="mini"
+            type="danger"
+          @click="goodsJP(temp.$index, temp.row,'goodsJP.html')">竞拍</el-button>
+       <!-- <el-button
+          size="mini"
+          type="danger"
+          @click="goodsDelete(temp.$index,temp.row)">删除</el-button>-->
+          
+      </template>
+    </el-table-column>
+  </el-table>
+  <div class="block">
+ 
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="1"
+      :page-sizes="[3,5,8]"
+      :page-size="100"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total=goods.length>
+    </el-pagination>
+  </div>
+</template>
+
+<!-- main end-->
+</div>
+
+</body>
+<script >
+var main={
+	  methods: {
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      handleCurrentChange(val) {
+      	/*这里是用来分页  参数val是当前页*/
+        console.log(`当前页: ${val}`);
+      },
+      /*竞拍页面*/
+      goodsJP(index,obj,url){
+      		$("#cnt").load(url);
+      }
+      ,
+      /*删除*/
+      goodsDelete(index,obj,){
+      let _this=this;
+      	  this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+        	workapp.loading=true;
+        	setTimeout(()=>{
+        		workapp.loading=false;
+        		_this.goods.splice(index,1)
+        		   this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        	},500);
+        	
+        	
+       
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      	
+      }
+    },
+    data() {
+      return {
+      	loading:true,
+      	good:{
+      		goodsId:'',
+          startDate:'',
+          endDate:'',
+          nameMS:'',
+          nameMC:'',
+			price:'',
+			status:0
+      		
+      	},
+        goods: [{
+        	goodsId:1,
+          startDate: '2016-05-03',
+          endDate: '2016-05-03',
+          nameMS: '冥国脏鼠',
+          nameMC:'国书',
+					price:1000,
+			status:0
+        }, {
+        	goodsId:1,
+            startDate: '2016-05-03',
+          endDate: '2016-05-03',
+          nameMS: '冥国脏鼠',
+          nameMC:'国书',
+					price:1000,
+			status:0
+        }, {
+        	goodsId:1,
+            startDate: '2016-05-03',
+          endDate: '2016-05-03',
+          nameMS: '冥国脏鼠',
+          nameMC:'国书',
+					price:1000,
+			status:0
+        }, {
+        	goodsId:1,
+          startDate: '2016-05-03',
+          endDate: '2016-05-03',
+          nameMS: '冥国脏鼠',
+          nameMC:'国书',
+					price:1000,
+			status:0
+        }, {
+        	goodsId:1,
+           startDate: '2016-05-03',
+          endDate: '2016-05-03',
+          nameMS: '冥国脏鼠',
+          nameMC:'国书',
+					price:1000,
+			status:0
+        }, {
+        	goodsId:1,
+           startDate: '2016-05-03',
+          endDate: '2016-05-03',
+          nameMS: '冥国脏鼠',
+          nameMC:'国书',
+					price:1000,
+			status:0
+        }, {
+        	goodsId:1,
+          startDate: '2016-05-03',
+          endDate: '2016-05-03',
+          nameMS: '冥国脏鼠',
+          nameMC:'国书',
+					price:1000,
+			status:0
+        }, {
+        	goodsId:1,
+          startDate: '2016-05-03',
+          endDate: '2016-05-03',
+          nameMS: '冥国脏鼠',
+          nameMC:'国书',
+					price:1000,
+			status:0
+        }]
+      }
+    },
+    mounted(){
+			let _this=this;
+			setTimeout(()=>{
+				_this.loading=false;
+			},1000);
+		}
+  }
+	var zhuyeApp=Vue.extend(main);
+			new zhuyeApp().$mount("#zhuyeApp")
+</script>
+</html>

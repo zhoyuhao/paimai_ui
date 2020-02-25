@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>竞拍者注册</title>
+<link rel="stylesheet" type="text/css" href="css/index.css"/>
+<script type="text/javascript" src="js/vue.js"></script>
+		<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="js/jq_ajax_config.js"></script>
+</head>
+<style type="text/css">
+
+</style>
+<body>
+<div id="zhuce" >
+	<el-container>
+  <el-header>
+  	<h1>竞拍者注册</h1>
+  </el-header>
+  <el-main>
+  	<el-col :span="8">
+  	<el-form :model="forms" ref="forms" :rules="rules" label-width="80px">
+				<el-form-item label="用户名" prop="userName">
+					<el-col>
+						<el-input v-model="forms.userName" placeholder="请输入用户名"></el-input>
+					</el-col>
+				</el-form-item>
+				<el-form-item label="密码" prop="userPwd">
+					<el-col>
+						<el-input type="password" v-model="forms.userPwd" placeholder="请输入密码"></el-input>
+					</el-col>
+				</el-form-item>
+				<el-form-item label="身份证号" prop="userIdCard">
+					<el-col>
+						<el-input v-model="forms.userIdCard" placeholder="请输入身份证号"></el-input>
+					</el-col>
+				</el-form-item>
+				<el-form-item label="电话" prop="userPhone">
+					<el-col>
+						<el-input v-model="forms.userPhone" placeholder="请输入电话号码"></el-input>
+					</el-col>
+				</el-form-item>
+				<el-form-item label="住址" prop="userAddress">
+					<el-col>
+						<el-input v-model="forms.userAddress" placeholder="请输入住址"></el-input>
+					</el-col>
+				</el-form-item>
+				<el-form-item label="邮政编码" prop="userCode">
+					<el-col>
+						<el-input v-model="forms.userCode" placeholder="请输入邮政编码"></el-input>
+					</el-col>
+				</el-form-item>
+				<el-form-item label="验证码" prop="yzm">
+					<el-col>
+						<el-input v-model="yzm" placeholder="请输入验证码"></el-input>
+					</el-col>
+				</el-form-item>
+				<el-form-item label="" prop="">
+					<el-col>
+						<span class="wordp lf"><img src="images/img2.jpg" width="96" height="36" alt="" /></span>
+            <span class="blues lf"><a href="" title="">看不清</a></span>
+					</el-col>
+				</el-form-item>
+				<el-form-item>
+					<el-button type="primary" @click="reg">注册</el-button>
+					<el-button type="danger" @click="cancel">取消</el-button>
+				</el-form-item>
+		</el-form>
+		</el-col>
+		<el-col :span="8"></el-col>
+  </el-main>
+	</el-container>
+	
+
+</div>
+ <!--footer end-->
+ 
+</div>
+</body>
+<script type="text/javascript" src="js/index.js"></script>
+<script>
+	var Main = new Vue({
+		el:"#zhuce",
+		data:{
+			forms:{
+				userName:"",
+				userPwd:"",
+				userIdCard:"",
+				userPhone:"",
+				userAddress:"",
+				userCode:""
+			},
+			yzm:"",
+			rules:{
+				userName:[{
+					min: 6,
+					required:true,
+					message:"用户名要求不低于6个字符",
+					trigger:"blur"
+				}],
+				userPwd:[{
+					min: 6,
+					required:true,
+					message:"密码要求不低于6个字符",
+					trigger:"blur"
+				}],
+				userIdCard:[{
+					required:true,
+					message:"身份证号必填",
+					trigger:"blur"
+				}],
+				userPhone:[{
+					required:true,
+					message:"电话号码必填",
+					trigger:"blur"
+				}],
+				userAddress:[{
+					required:true,
+					message:"住址必填",
+					trigger:"blur"
+				}],
+				userCode:[{
+					required:true,
+					message:"邮政编码必填",
+					trigger:"blur"
+				}],
+				yzm:[{
+					required:true,
+					message:"请正确填写验证码",
+					trigger:"blur"
+				}],
+			}
+		},
+		methods:{
+			reg(){
+				let _this = this;
+				this.$refs['forms'].validate(valid => {
+					if(valid) {
+							//验证通过
+							//自定义加载块
+							const loading = this.$loading({
+								lock: true,
+								text: '努力更新中....',
+								spinner: 'el-icon-loading',
+								background: 'rgba(0, 0, 0, 0.5)'
+							});
+							//延迟2秒，模拟网络延迟
+							setTimeout(() => {
+								this.$alert('注册成功！', '系统提示');
+								loading.close(); //关闭加载块【非常重要】
+								location.href='竞拍者登录.html';
+								/*$.ajax('http://localhost:8080/springmvc_4/api/persons/person', {
+									type: 'post',
+									data: JSON.stringify(this.person),
+									dataType: 'json',
+									contentType: 'application/json',
+									success(msg) {
+										if(msg.code == "200") {
+											loading.close(); //关闭加载块【非常重要】
+											_this.$message({
+												type: 'success',
+												message: '新增成功'
+											});
+											_this.clearData(); //清除数据
+										}
+									}
+								});*/
+							}, 2000);
+						} else {
+							//验证失败
+							this.$alert('请按格式正确填写信息', '系统提示');
+					}
+				})
+			},
+			cancel(){
+				location.href='竞拍者登录.html';
+			}
+		}
+	});
+</script>
+</html>

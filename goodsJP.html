@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link href="css/common.css" rel="stylesheet" type="text/css" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    line-height: 0px;
+}
+.rg{
+	margin-right:20ex;
+}
+.salebd {
+    border: 0px solid #CF9236;
+    padding: 5px;
+    width: 490px;
+  
+}
+.el-input__inner {
+	max-width: 140px;
+}
+.el-input{
+	max-width: 140px;
+}
+.rows {
+    height: 28px;
+    overflow: hidden;
+    background-color: white;
+   border-bottom: 1px solid  #E9EEF3;
+}
+.items {
+     border: 1px solid #E9EEF3;
+    line-height: 28px;
+}
+.rows li {
+    float: left;
+    width: 150px;
+    text-align: center;
+    border-right: 1px solid  #E9EEF3;
+}
+</style>
+<body>
+<div class="wrap" id="goodsJPApp">
+<!-- main begin-->
+  <h1 style="margin-top: 0px;">商品竞拍</h1>
+  
+  
+  <div class="items sg-font lf">
+      <ul class="rows">
+        <li>名称：</li>
+        <li class="borderno">{{good.nameMC}}</li>
+      </ul>
+      <ul class="rows">
+        <li>描述：</li>
+        <li class="borderno">{{good.nameMS}}</li>
+      </ul>
+      <ul class="rows">
+        <li>开始时间：</li>
+        <li class="borderno">{{good.startDate}}</li>
+      </ul>
+      <ul class="rows">
+        <li>结束时间：</li>
+        <li class="borderno">{{good.endDate}}</li>
+      </ul>
+      <ul class="rows border-no">
+        <li>起拍价：</li>
+        <li class="borderno">{{good.price}}</li>
+      </ul>
+  </div>
+  <div class="rg borders"><img src="images/ad20.jpg" width="200" height="170" alt="" />
+  </div>
+  <!--<div class="cl"></div>-->
+  <div class="top10 salebd" style="clear: both;box-shadow: 1px 1px 5px darkorange;">
+       <p>
+       <label for="price" style="font-size: 15px;">出价：</label>
+      <el-input
+	 size="mini"
+    maxlength="8"
+    oninput="value=value.replace(/[^\d.]/g,'')"
+    v-model="price"
+    placeholder="不能低于起拍价"
+clearable
+></el-input>
+
+
+
+         <el-button type="warning" @click="auction(price)">竞拍</el-button>
+       </p>
+  </div>
+ 
+  <div class="offer">
+    <h1>出价记录
+        <el-button type="primary"  @click='renovate'>刷新</el-button>
+            <el-button type="primary" @click='_return'>返回列表</el-button>
+    
+    </h1>
+   <template>
+  <el-table
+  	
+  	 v-loading="loading"
+  	 height="230"
+    :data="goodsCount"
+    border
+    style="width:100%">
+    <el-table-column
+      prop="jpDate"
+        align="center"
+      label="竞拍时间"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="jpPrice"
+      label="竞拍价格"
+        align="center"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="jpUser"
+        align="center"
+      label="竞拍人">
+    </el-table-column>
+  </el-table>
+</template>
+  </div>
+<!-- main end-->
+</div>
+</body>
+<script>
+	var Main={
+    data() {
+      return {
+      	bool:true,
+      	loading:false,
+      	price:'',
+     	good:{
+      		goodsId:1,
+          startDate:"2012-1-1",
+          endDate:"2012-1-1",
+          nameMS:'古董',
+          nameMC:'瓷器花瓶',
+					price:'1000'
+      		
+      },
+      goodsCount:[
+      {jpDate:"2012-1-1",jpPrice:2000,jpUser:"李四"},
+       {jpDate:"2012-1-1",jpPrice:2000,jpUser:"李四"},
+        {jpDate:"2012-1-1",jpPrice:2000,jpUser:"李四"},
+         {jpDate:"2012-1-1",jpPrice:2000,jpUser:"李四"},
+       {jpDate:"2012-1-1",jpPrice:2000,jpUser:"李四"},
+        {jpDate:"2012-1-1",jpPrice:2000,jpUser:"李四"},
+         {jpDate:"2012-1-1",jpPrice:2000,jpUser:"李四"}
+      ]
+      }
+    },
+    methods:{
+    	/*刷新*/
+    	renovate(){
+    		let _this=this;
+    		_this.loading=true;
+			setTimeout(()=>{
+				_this.loading=false;
+			},1000);
+    },
+    /*后退*/
+    	_return(){
+    		$("#cnt").load("zhuye.html");
+    	},
+    /*竞拍*/
+   auction(price){
+   	if(parseFloat(price)>parseFloat(this.good.price)){
+   	}else{
+   		  this.$alert('竞拍价不能低于起拍价', '提示', {
+          confirmButtonText: '确定'})
+   	}
+   	
+   }
+    }
+  }
+	var goodsJPApp=Vue.extend(Main);
+			new goodsJPApp().$mount("#goodsJPApp")
+</script>
+</html>
