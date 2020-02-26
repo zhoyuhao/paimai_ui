@@ -16,10 +16,13 @@
 			background-repeat: no-repeat;   //不重复
     		background-size: 100% 100%;     // 满屏
 		}
+		[v-cloak] {
+				display: none;
+			}
 	</style>
 
 	<body>
-		<div id="adminLogin" style="background-color: white;">
+		<div id="adminLogin" style="background-color: white; " v-cloak>
 			<el-col :span="8" :offset="8" class="grid-content bg-purple" style="box-shadow: 0px 0px 3px gray;padding: 10px;margin-top: 60px;">
 				<div class="grid-content ">
 					<h4 style="color: gold;text-align: center;">拍卖管理员登录</h4>
@@ -114,6 +117,7 @@
 							this.$alert('用户名或密码错误！', '系统提示');
 						}
 					});*/
+					window.sessionStorage.setItem("power",this.loginfrom.userName);
 					location.href="work.html"
 				},
 				loginSub() {

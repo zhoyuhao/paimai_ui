@@ -51,8 +51,9 @@
   .el-container:nth-child(7) .el-aside {
     line-height: 320px;
   }
-  .el-header, .el-footer {
-    background-color: #B3C0D1;
+
+.el-header, .el-footer {
+    background-color: lightslategrey;
     text-align: left;
     line-height: 40px;
     font-size: 20px;
@@ -72,14 +73,30 @@ font-weight: 900;
 	font-size: 16px;	
 }
 .el-menu-item.is-active {
-    color:#E6A23C;
+    color: #ef7206;
+     background-color: lightgrey;
 }
+.el-menu {
+     border-right: solid 0px #e6e6e6; 
+    list-style: none;
+    position: relative;
+    margin: 0;
+    padding-left: 3px;
+    background-color: rgba(255,255,255,0);
+}
+[v-cloak] {
+				display: none;
+			}
+/*.el-menu-item:focus, .el-menu-item:hover {
+    outline: 0;
+  background-color: lightgrey;  
+}*/
 </style>
 	</head>
 	<body>
 		
-		<div id="workapp">
-<el-header>在线拍卖系统<span style="float: right;font-size: 15px;">用户：<span style="color: red;">{{user}}</span><el-button type="danger" @click="zhuxiao">注销</el-button></span> </el-header>
+		<div id="workapp" v-cloak>
+<el-header>{{tilte}}<span style="float: right;font-size: 15px;">用户：<span style="color: red;">{{user}}</span><el-button type="danger" @click="zhuxiao">注销</el-button></span> </el-header>
   <!--  <el-header>北大青鸟拍卖系统<span class="el-icon-shopping-bag-1"></span></el-header>-->
 <el-container  v-loading="loading"
     element-loading-text="拼命加载中"
@@ -92,15 +109,15 @@ font-weight: 900;
 <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
 
 
- <el-menu-item index="1">
+ <el-menu-item index="1"  v-if="power!='管理员'" @click="addUser('zhuye.html')">
         <i class="el-icon-menu"></i>
-        <span slot="title"  @click="addUser('zhuye.html')">竞拍首页</span>
+        <span slot="title" >竞拍首页</span>
       </el-menu-item>
- <el-menu-item index="2">
+ <el-menu-item index="2"  v-if="power!='管理员'"  @click="addUser('goodsCount.html')">
         <i class="el-icon-s-data"></i>
-        <span slot="title"  @click="addUser('goodsCount.html')">竞拍数据</span>
+        <span slot="title" >竞拍数据</span>
       </el-menu-item>
-<el-submenu index="3">
+<el-submenu v-if="power=='管理员'" index="3">
     <template slot="title">
     	  	
     	 <i class="el-icon-setting"></i>
@@ -146,6 +163,8 @@ font-weight: 900;
 		var workapp=new _workapp1({
 			el:"#workapp",
 			data:{
+				tilte:"在线拍卖系统",
+				power:"",
 				user:"张三",
 				loading:false,
 				isCollapse:false
@@ -177,7 +196,15 @@ font-weight: 900;
       	location.href="glylogin.html";
       	
       }
+			},
+			mounted(){
+			
+				this.power=window.sessionStorage.getItem("power");
+				if(this.power=="管理员"){
+					this.tilte="在线拍卖管理系统";
+				}
 			}
+			
 		});
 		
 		
