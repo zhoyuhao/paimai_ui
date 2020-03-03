@@ -109,15 +109,15 @@ font-weight: 900;
 <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
 
 
- <el-menu-item index="1"  v-if="power!='管理员'" @click="addUser('zhuye.html')">
+ <el-menu-item index="1"  v-if="power!=1" @click="addUser('zhuye.html')">
         <i class="el-icon-menu"></i>
         <span slot="title" >竞拍首页</span>
       </el-menu-item>
- <el-menu-item index="2"  v-if="power!='管理员'"  @click="addUser('goodsCount.html')">
+ <el-menu-item index="2"  v-if="power!=1"  @click="addUser('goodsCount.html')">
         <i class="el-icon-s-data"></i>
         <span slot="title" >竞拍数据</span>
       </el-menu-item>
-<el-submenu v-if="power=='管理员'" index="3">
+<el-submenu v-if="power==1" index="3">
     <template slot="title">
     	  	
     	 <i class="el-icon-setting"></i>
@@ -148,19 +148,7 @@ font-weight: 900;
 	<script type="text/javascript" src="js/index.js" ></script>
 	<script>
 		
-		var Main = {
-    methods: {
-/*       open1() {
-        this.$notify({
-          title: '提示',
-          message: '管理员添加成功！',
-          offset:30
-        });
-      }*/
-    }
-  }
-		var _workapp1=Vue.extend(Main);
-		var workapp=new _workapp1({
+		var workapp=new Vue({
 			el:"#workapp",
 			data:{
 				tilte:"在线拍卖系统",
@@ -193,14 +181,15 @@ font-weight: 900;
       	$("#cnt").html('<h1>欢迎您使用bug系统</h1>')
       },
       zhuxiao(){
+      	sessionStorage.clear();
       	location.href="glylogin.html";
       	
       }
 			},
 			mounted(){
-			
-				this.power=window.sessionStorage.getItem("power");
-				if(this.power=="管理员"){
+				this.power=sessionStorage.getItem("power");
+				this.user=sessionStorage.getItem("username");
+				if(this.power==1){
 					this.tilte="在线拍卖管理系统";
 				}
 			}
