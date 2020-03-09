@@ -45,35 +45,42 @@ stripe
     border
     style="width: 100%">
     <el-table-column
-      prop="nameMC"
+      prop="goodsname"
       label="名称"
-      width="180">
+      width="180"
+      >
     </el-table-column>
 
     <el-table-column
-      prop="startDate"
-      label="开始时间">
+      prop="startdate"
+      label="开始时间"
+       width="180"
+      >
     </el-table-column>
     
     <el-table-column
-      prop="endDate"
-      label="结束时间">
+      prop="enddate"
+      label="结束时间"
+       width="180"
+      >
     </el-table-column>
     <el-table-column
-      prop="price"
-      label="起拍价">
+      prop="goodsprice"
+      label="起拍价"
+       width="110"
+       >
     </el-table-column>
    <el-table-column
       prop="priceOk"
       label="成交价"
-      width="180">
+      width="110">
     </el-table-column>
         <el-table-column
         	     align="center"
       label="买家"
       width="180">
       <template slot-scope="temp">
-      	<span style="color: red;">{{temp.row.user}}</span>
+      	<span style="color: red;">{{temp.row.username}}</span>
       </template>
     </el-table-column>
       </template>
@@ -84,7 +91,7 @@ stripe
 
   <el-table
   	:row-class-name="tableRowClassName"
-    :data="goodsNotes"
+    :data="pageinfos.list"
     style="width: 100%">
     <el-table-column type="expand">
       <template slot-scope="props">
@@ -92,17 +99,17 @@ stripe
    <el-table 	
 			stripe   	
    		 height="250"
-    :data="props.row.notes"
+    :data="props.row.list"
     border
     style="width: 362px">
     <el-table-column label="竞拍出价记录">
     <el-table-column
-      prop="user"
+      prop="userName"
       label="竞拍人"
       width="180">
     </el-table-column>
    <el-table-column
-      prop="price"
+      prop="dPrice"
       label="竞拍价"
       width="180">
    </el-table-column>
@@ -111,19 +118,19 @@ stripe
     </el-table-column>
     <el-table-column
       label="名称"
-      prop="nameMC">
+      prop="goodsname">
     </el-table-column>
     <el-table-column
       label="开始时间"
-      prop="startDate">
+      prop="startdate">
     </el-table-column>
     <el-table-column
       label="结束时间"
-      prop="endDate">
+      prop="enddate">
     </el-table-column>
       <el-table-column
       label="起拍价"
-      prop="price">
+      prop="goodsprice">
     </el-table-column>
   </el-table>
 </template>
@@ -132,11 +139,11 @@ stripe
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="1"
-      :page-sizes="[2,3,6]"
-      :page-size="100"
+      :current-page="pageinfos.pageNum"
+      :page-sizes="[6,3,2]"
+      :page-size="pageinfo.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total=goodsNotes.length>
+      :total="pageinfos.total">
     </el-pagination>
   </div>
 
@@ -147,11 +154,11 @@ stripe
   var Main={
   	  methods: {
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+      	this.pageinfos.pageNum=1;
+        this.pageinfo(1,val);
       },
       handleCurrentChange(val) {
-      	/*这里是用来分页  参数val是当前页*/
-        console.log(`当前页: ${val}`);
+      this.pageinfo(val,this.pageinfos.pageSize)
       },
            tableRowClassName({row, rowIndex}) {
         if (rowIndex === 1) {
@@ -162,116 +169,35 @@ stripe
           return 'success-row';
         }
         return '';
+      },
+      /*分页查看已经开始的商品*/
+      pageinfo(pageNum,pageSize){
+      	let _this=this;
+      	$.getJSON(`http://127.0.0.1:8080/paimai/api/goods/queryStartAndEndDate/${pageNum}/${pageSize}`,function(data){
+      		_this.pageinfos=data;
+      		//alert(data.list[0].list.length)
+      	})
+      },
+      /*查看已经结束的商品*/
+      queryNoStartAndEndDate(){
+      	let _this=this;
+      	$.getJSON('http://127.0.0.1:8080/paimai/api/goods/queryNoStartAndEndDate',function(data){
+      		_this.goods=data;
+      		
+      	})
+      	
       }
       },
     data() {
       return {
-        goods:[
-        {
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-					priceOk:2000,
-					user:"张三"
-        },
-        {
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-					priceOk:2000,
-					user:"张三"
-        },
-        {
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-					priceOk:2000,
-					user:"张三"
-        },
-        {
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-					priceOk:2000,
-					user:"张三"
-        },
-        {
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-					priceOk:2000,
-					user:"张三"
-        }
-        
-        ],
-        goodsNotes:[
-         {
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-					notes:[{user:"李四12333",price:2000},{user:"李四12312312",price:2000}]
-        },{
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-	notes:[{user:"李四",price:2000},{user:"李四",price:2000},{user:"李四",price:2000}]
-        },{
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-					notes:[{user:"李四2",price:2000},{user:"李四2",price:2000}]
-        },{
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-						notes:[{user:"李四3",price:2000},{user:"李四3",price:2000}]
-        },{
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-					notes:[{user:"李四",price:2000},{user:"李四",price:2000}]
-        },{
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-					notes:[{user:"李四",price:2000},{user:"李四",price:2000}]
-        }
-        
-        ]
+        goods:[],
+        pageinfos:{}
       }
+    },
+    mounted(){
+    	this.pageinfo(1,6);
+    	this.queryNoStartAndEndDate();
+    	
     }
   }
   

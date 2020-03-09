@@ -44,21 +44,21 @@
 <el-input
 	  	 size="mini"
   placeholder="请输入名称"
-  v-model="good.nameMC"
+  v-model="good.goodsname"
   clearable>
 </el-input>
         <label for="names">描述</label>
 <el-input
 	  	 size="mini"
   placeholder="请输入描述"
-  v-model="good.nameMS"
+  v-model="good.depict"
   clearable>
 </el-input>
 
         <label for="time">开始时间</label>
 <el-date-picker
            	 size="mini"
-      v-model="good.startDate"
+      v-model="good.startdate"
       type="datetime"
       placeholder="开始时间"
       align="right"
@@ -68,7 +68,7 @@
         <label for="end-time">结束时间</label>
            <el-date-picker
            	 size="mini"
-      v-model="good.endDate"
+      v-model="good.enddate"
       type="datetime"
       placeholder="结束时间"
       align="right"
@@ -79,11 +79,11 @@
 	 size="mini"
     maxlength="8"
     oninput="value=value.replace(/[^\d.]/g,'')"
-    v-model="good.price"
+    v-model="good.goodsprice"
     placeholder="请输入价格"
 clearable
 ></el-input>
-   <el-button type="primary" >查看</el-button>
+   <el-button type="primary" @click="query">查看</el-button>
   </div>
 
   <template>
@@ -93,26 +93,27 @@ clearable
     border
     style="width: 100%">
     <el-table-column
-      prop="nameMC"
+   
+      prop="goodsname"
       label="名称"
       width="180">
     </el-table-column>
     <el-table-column
-      prop="nameMS"
+      prop="depict"
       label="描述"
       width="180">
     </el-table-column>
     <el-table-column
-      prop="startDate"
+      prop="startdate"
       label="开始时间">
     </el-table-column>
     
     <el-table-column
-      prop="endDate"
+      prop="enddate"
       label="结束时间">
     </el-table-column>
     <el-table-column
-      prop="price"
+      prop="goodsprice"
       label="起拍价">
     </el-table-column>
        <el-table-column
@@ -122,9 +123,12 @@ clearable
       <template slot-scope="temp">
       	
       	 <el-button
+      	 v-if="dateFileters1(temp.row.startdate,temp.row.enddate)"
           size="mini"
             type="danger"
           @click="goodsJP(temp.$index, temp.row,'goodsJP.html')">竞拍</el-button>
+          <el-button v-if="dateFileters2(temp.row.startdate,temp.row.enddate)"  type="warning" disabled>未开始</el-button>
+            <el-button 	v-if="dateFileters3(temp.row.startdate,temp.row.enddate)" disabled type="info">已结束</el-button>
        <!-- <el-button
           size="mini"
           type="danger"
@@ -138,11 +142,11 @@ clearable
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="1"
-      :page-sizes="[3,5,8]"
-      :page-size="100"
+      :current-page="currentPage"
+      :page-sizes="[8,5,3]"
+      :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total=goods.length>
+      :total="goodsCount">
     </el-pagination>
   </div>
 </template>
@@ -153,16 +157,20 @@ clearable
 </body>
 <script >
 var main={
+
 	  methods: {
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-      	/*这里是用来分页  参数val是当前页*/
-        console.log(`当前页: ${val}`);
-      },
+    handleSizeChange(val) {
+					this.pageSize = val;
+					this.pageinfo(1, val);
+				},
+				handleCurrentChange(val) {
+					this.pageinfo(val, this.pageSize);
+				},
       /*竞拍页面*/
       goodsJP(index,obj,url){
+      		/*保存竞拍商品信息*/
+      		window.sessionStorage.setItem("goodsJP",JSON.stringify(obj));
+      	
       		$("#cnt").load(url);
       }
       ,
@@ -193,90 +201,72 @@ var main={
           });          
         });
       	
-      }
+      },
+      /*分页加载*/
+				pageinfo(pageNum, pageSize) {
+					let _this = this;
+					this.good.pageSize = pageSize;
+					this.good.pageNum = pageNum;
+					$.ajax(`http://127.0.0.1:8080/paimai/api/goods`, {
+						type: "post",
+						dataType: "json",
+						data: JSON.stringify(_this.good),
+						contentType: "application/json",
+						success: function(data) {
+							_this.currentPage = data.pageNum;
+							_this.goods = data.list;
+							_this.goodsCount = data.total;
+						}
+					})
+
+				},
+				/*查看*/
+				query() {
+					this.pageinfo(1, 8);
+				},
+      			dateFileters2(date,date2) {
+				var d = new Date();
+				var d2 = new Date(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds());
+					return new Date(date).getTime() > d2.getTime() ;
+				},
+					dateFileters1(date,date2) {
+				var d = new Date();
+				var d2 = new Date(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds());
+					return new Date(date).getTime()<=d2.getTime() && new Date(date2).getTime()>=d2.getTime();
+				},
+					dateFileters3(date,date2) {
+				var d = new Date();
+				var d2 = new Date(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds());
+					return  new Date(date2).getTime()<d2.getTime();
+				}
     },
+     
     data() {
       return {
-      	loading:true,
-      	good:{
-      		goodsId:'',
-          startDate:'',
-          endDate:'',
-          nameMS:'',
-          nameMC:'',
-			price:'',
-			status:0
-      		
-      	},
-        goods: [{
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-			status:0
-        }, {
-        	goodsId:1,
-            startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-			status:0
-        }, {
-        	goodsId:1,
-            startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-			status:0
-        }, {
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-			status:0
-        }, {
-        	goodsId:1,
-           startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-			status:0
-        }, {
-        	goodsId:1,
-           startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-			status:0
-        }, {
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-			status:0
-        }, {
-        	goodsId:1,
-          startDate: '2016-05-03',
-          endDate: '2016-05-03',
-          nameMS: '冥国脏鼠',
-          nameMC:'国书',
-					price:1000,
-			status:0
-        }]
+					dialogFormVisible: false,
+					loading: true,
+					goodsCount: 0,
+					pageSize: 8,
+					currentPage: 1,
+					good: {
+						goodsid: null,
+						startdate: null,
+						enddate: null,
+						goodsname: null,
+						depict: null,
+						goodsprice: null,
+						pageNum: null,
+						pageSize: null
+					},
+					goods: []
+      
       }
     },
+
     mounted(){
+    	
 			let _this=this;
+			_this.pageinfo(1,8);
 			setTimeout(()=>{
 				_this.loading=false;
 			},1000);

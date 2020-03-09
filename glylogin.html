@@ -116,6 +116,7 @@
 						if(valid) {
 							$.getJSON(`http://127.0.0.1:8080/paimai/api/user/${_this.loginfrom.userName}/${_this.loginfrom.userPwd}`, function(data) {
 								if(data.username!='') {
+									sessionStorage.setItem("user",JSON.stringify(data));
 									sessionStorage.setItem("power",data.power);
 									sessionStorage.setItem("username",data.username);
 									location.href = "work.html"
